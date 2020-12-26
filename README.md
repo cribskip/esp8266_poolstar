@@ -10,7 +10,8 @@ Control and query our new heat pump and later integrate it to the spa controller
 
 # Images
 ![Prototype](https://github.com/cribskip/esp8266_poolstar/blob/main/images/Prototype.jpg)
-for other pictures, please check our the images directory.
+![PulseView session](https://github.com/cribskip/esp8266_poolstar/blob/main/images/Poolstar.sr%20-%20PulseView.png)
+for other pictures, please check out the images directory.
 
 # Remarks / ToDos
 - [ ] Finish reversing
