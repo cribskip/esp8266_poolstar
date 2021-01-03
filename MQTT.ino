@@ -1,4 +1,3 @@
-/*
 // function called when a MQTT message arrived
 void callback(char* p_topic, byte * p_payload, unsigned int p_length) {
   // concat the payload into a string
@@ -8,61 +7,29 @@ void callback(char* p_topic, byte * p_payload, unsigned int p_length) {
   }
   String topic = String(p_topic);
 
-  mqtt.publish("AWHP/debug", topic.c_str());
+  mqtt.publish("POOLSTAR/debug", topic.c_str());
   _yield();
 
   // handle message topic
-  if (topic.startsWith("AWHP/command/")) {
+  if (topic.startsWith("POOLSTAR/command/")) {
     if (topic.endsWith("reset")) ESP.restart();
-    else {
-      // Write value as payload directly to Output buffer /x
-      uint8_t reg = topic.substring(13).toInt();
-      uint8_t val = payload.toInt();
-
-      Q_ovr[reg] = val;
-      state.sent = false;
-    }
-  } else if (topic.startsWith("AWHP/set/")) {
-    if (topic.endsWith("mode")) {
-      uint8_t newmode = 0x00;
-
-      if (payload.equals("OFF")) newmode = 0x30;
-      else if (payload.equals("Cool")) newmode = 0x22;
-      else if (payload.equals("Heat")) newmode = 0x32;
-      else if (payload.equals("AI")) newmode = 0x2E;
-
-      Q_ovr[1] = newmode;
-      state.sent = false;
-    } else if (topic.endsWith("DHW")) {
-      uint8_t newdata = Q_out[3];
-
-      if (payload.equals("OFF")) newdata = bitClear(newdata, 7);
-      else if (payload.equals("ON")) newdata = bitSet(newdata, 7);
-
-      Q_ovr[3] = newdata;
-      state.sent = false;
-
-    } else if (topic.endsWith("aioffset")) {
-      uint8_t newdata = Q_out[10];
-      int offset = payload.toInt();
-
-      if (offset < 0) offset = 10 + offset;
-      newdata = newdata & 0x0F;
-      newdata |= (offset << 4);
-
-      Q_ovr[10] = newdata;
-      state.sent = false;
-    }
-
-    else if (topic.endsWith("Silent")) {
-      uint8_t newmode = Q_out[3];
-
-      if (payload.equals("OFF")) newmode = bitClear(newmode, 3);
-      else if (payload.equals("ON")) newmode = bitSet(newmode, 3);
-
-      Q_ovr[3] = newmode;
-      state.sent = false;
+  } else if (topic.startsWith("POOLSTAR/set/")) {
+    if (topic.endsWith("target")) {
+      m_target = payload.toInt();
+      state.dirty = true;
+    } else if (topic.endsWith("mode")) {
+      if (payload.equals("OFF")) m_mode = 0x00;
+      else if (payload.equals("Heat")) m_mode = 0x84;
+      else if (payload.equals("Cool")) m_mode = 0x81;
+      else if (payload.equals("Auto")) m_mode = 0x88;
+      else if (payload.equals("ON")) m_mode = 0x88;
+      state.sub = 0x02;
+      state.dirty = true;
+    }  else if (topic.endsWith("sub")) {
+      if (payload.equals("Auto")) state.sub = 0x00;
+      else if (payload.equals("Boost")) state.sub = 0x01;
+      else if (payload.equals("Eco")) state.sub = 0x02;
+      state.dirty = true;
     }
   }
 }
-*/
