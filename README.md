@@ -3,7 +3,7 @@ WIFI-MQTT-Bridge for Poolstar R32 Pool heat pump f.e.
   1. https://store.poolstar.fr/Catalog/Product/5666
   2. https://warmpool.eu/bombas_silenp/  
 
-and maybe others. Please open an issue if you think yours may be compatible so we can check.
+and maybe others. Please open an issue if you think yours may be compatible so we can check together.
 
 # Goal
 Control and query our new heat pump and later integrate it to the spa controller (will be seperate repo)
@@ -14,9 +14,11 @@ Control and query our new heat pump and later integrate it to the spa controller
 for other pictures, please check out the images directory.
 
 # Remarks / ToDos
-- [ ] Finish reversing
-- [ ] Finisch Hardware
+- [x] Reverse engineer up to a usable state
+- [ ] Complete Hardware
 - [ ] Make docs readable ;-)
+
+Currently, the sensors in the unit are published to MQTT. Target temperature and modes can be set (Auto, Heat, Cool, on/off) but show some inconsistency still to be fixed.
 
 # Hardware
   * ESP8266
@@ -24,4 +26,9 @@ for other pictures, please check out the images directory.
   * Wires & Connectors
 
 # How to implement
-TBD
+  - Wire TX/GPIO1 to DI
+  - Wire RX/GPIO3 to RO
+  - Wire GPIO2 to DE and RE (Connect all three together)
+  - Hook up 3.3V Supply to ESP8266
+  - Hook up 5V Supply to MAX485 Board
+  - Connect A/Yellow Wire and B/Green wire to MAX485 module (if no proper data is received, try to swap the wires)
